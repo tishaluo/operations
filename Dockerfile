@@ -6,15 +6,13 @@ WORKDIR /src
 
 # 先拷贝 pom 预热依赖缓存（加速增量构建）
 COPY pom.xml .
-RUN --mount=type=cache,target=/root/.m2 \
-    mvn -B -q -DskipTests dependency:go-offline
+
 
 # 再拷贝源码并编译打包（-T 1C 并行；按需关闭跳测）
 COPY src ./src
 ARG SKIP_TESTS=true
 ARG MVN_PROFILES=
-RUN --mount=type=cache,target=/root/.m2 \
-    mvn -B -T 1C -DskipTests=${SKIP_TESTS} -P${MVN_PROFILES} package
+RUN mvn clean package -DskipTests
 
 ########################
 # 2) Runtime (JRE)
