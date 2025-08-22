@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: operations
+
+  datasource:
+    url: jdbc:postgresql://31.97.131.76:15432/n8n
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+
+
+
