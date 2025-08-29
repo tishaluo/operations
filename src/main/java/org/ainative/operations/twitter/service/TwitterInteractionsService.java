@@ -1,8 +1,6 @@
 package org.ainative.operations.twitter.service;
 
 import org.ainative.operations.twitter.entity.TwitterInteractions;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -4,9 +4,6 @@ import org.ainative.operations.twitter.entity.TwitterInteractions;
 import org.ainative.operations.twitter.dao.TwitterInteractionsDao;
 import org.ainative.operations.twitter.service.TwitterInteractionsService;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
