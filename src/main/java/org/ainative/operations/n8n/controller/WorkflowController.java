@@ -23,12 +23,12 @@ public class WorkflowController {
 
     private final WorkflowService workflowService;
 
+    private final TwitterConfigService twitterConfigService;
+
     public WorkflowController(WorkflowService workflowService, TwitterConfigService twitterConfigService) {
         this.workflowService = workflowService;
         this.twitterConfigService = twitterConfigService;
     }
-
-    private final TwitterConfigService twitterConfigService;
 
 
 

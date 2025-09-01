@@ -1,6 +1,7 @@
 package org.ainative.operations.n8n.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,7 +40,25 @@ public class WorkflowService {
                 throw new IOException("Unexpected code " + response);
             }
             String jsonStr = response.body() != null ? response.body().string() : "{}";
-            return JSON.parseObject(jsonStr);
+
+            JSONObject data = JSON.parseObject(jsonStr);
+            JSONArray dataArr = data.getJSONArray("data");
+
+            JSONArray resultArr = new JSONArray();
+            dataArr.forEach(o->{
+                JSONObject obj = (JSONObject) o;
+
+                String name = obj.getString("name");
+                String shortName = "";
+                if (name.startsWith(tag)){
+                    shortName =   name.replaceFirst(tag+"_","");
+                }
+                obj.put("shortName", shortName);
+                resultArr.add(o);
+
+            });
+            data.put("data", resultArr);
+            return data;
         } catch (IOException e) {
             throw new RuntimeException("Request failed", e);
         }
