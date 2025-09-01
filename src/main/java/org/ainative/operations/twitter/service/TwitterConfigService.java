@@ -34,4 +34,8 @@ public class TwitterConfigService {
     public TwitterConfig update(TwitterConfig twitterConfig) {
         return twitterConfigDao.save(twitterConfig);
     }
+
+    public boolean exist(UUID id) {
+        return twitterConfigDao.existsById(id);
+    }
 }

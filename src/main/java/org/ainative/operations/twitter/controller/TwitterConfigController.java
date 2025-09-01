@@ -63,4 +63,9 @@ public class TwitterConfigController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/exist/{id}")
+    public ResponseEntity<Boolean> exist(@PathVariable UUID id) {
+        return ResponseEntity.ok(twitterConfigService.exist(id));
+    }
 }
