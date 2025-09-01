@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -65,7 +66,7 @@ public class TwitterConfigController {
     }
 
     @GetMapping("/exist/{id}")
-    public ResponseEntity<Boolean> exist(@PathVariable UUID id) {
-        return ResponseEntity.ok(twitterConfigService.exist(id));
+    public ResponseEntity<Map<String,Boolean>> exist(@PathVariable UUID id) {
+        return ResponseEntity.ok(Map.of("exist", twitterConfigService.exist(id)));
     }
 }
