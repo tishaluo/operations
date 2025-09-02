@@ -7,6 +7,7 @@ import org.ainative.operations.twitter.entity.TwitterConfig;
 import org.ainative.operations.twitter.entity.TwitterInteractions;
 import org.ainative.operations.twitter.service.TwitterConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,5 +44,15 @@ public class WorkflowController {
 
     }
 
+
+    @GetMapping("/setActivate")
+    public ResponseEntity<Map<String, Boolean>> setActivate(@Param("workflowName") String workflowName) {
+        return ResponseEntity.ok(Map.of("state", workflowService.setActivate(workflowName)));
+    }
+
+    @GetMapping("/setDeactivate")
+    public ResponseEntity<Map<String, Boolean>> setDeactivate(@Param("workflowName") String workflowName) {
+        return ResponseEntity.ok(Map.of("state", workflowService.setDeactivate(workflowName)));
+    }
 
 }

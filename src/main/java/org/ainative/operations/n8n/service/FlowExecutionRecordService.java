@@ -1,6 +1,10 @@
 package org.ainative.operations.n8n.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.*;
 import org.ainative.operations.n8n.dao.TwitterFlowCountDto;
 import org.ainative.operations.n8n.domain.FlowExecutionRecord;
 import org.ainative.operations.n8n.repository.FlowExecutionRecordRepository;
@@ -9,6 +13,8 @@ import org.ainative.operations.twitter.service.TwitterConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,13 +22,13 @@ import java.util.UUID;
 @Service
 public class FlowExecutionRecordService {
 
-    @Autowired
-    private TwitterConfigService twitterConfigService;
+    private final TwitterConfigService twitterConfigService;
 
     private final FlowExecutionRecordRepository flowExecutionRecordRepository;
 
-    public FlowExecutionRecordService(FlowExecutionRecordRepository flowExecutionRecordRepository) {
+    public FlowExecutionRecordService(FlowExecutionRecordRepository flowExecutionRecordRepository, TwitterConfigService twitterConfigService) {
         this.flowExecutionRecordRepository = flowExecutionRecordRepository;
+        this.twitterConfigService = twitterConfigService;
     }
 
     public FlowExecutionRecord createRecord(FlowExecutionRecord flowExecutionRecord) {
@@ -40,6 +46,5 @@ public class FlowExecutionRecordService {
 
         return flowExecutionRecordRepository.countGroupByTwitterNameAndFlowName(twitterConfig.get().getUsername());
     }
-
 
 }
