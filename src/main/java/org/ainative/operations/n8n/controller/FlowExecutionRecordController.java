@@ -1,6 +1,7 @@
 package org.ainative.operations.n8n.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import org.ainative.operations.n8n.dao.TwitterFlowCountDto;
 import org.ainative.operations.n8n.domain.FlowExecutionRecord;
 import org.ainative.operations.n8n.service.FlowExecutionRecordService;
 import org.ainative.operations.twitter.entity.TwitterConfig;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,10 +33,14 @@ public class FlowExecutionRecordController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateEndTime(String executionId, LocalDateTime endTime) {
-       flowExecutionRecordService.updateTime(executionId,endTime);
+    public ResponseEntity<Void> updateEndTime(@RequestBody FlowExecutionRecord record) {
+       flowExecutionRecordService.updateTime(record);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<List<TwitterFlowCountDto>> countGroupByTwitterNameAndFlowName(@PathVariable UUID id ) {
+        return ResponseEntity.ok( flowExecutionRecordService.countGroupByTwitterNameAndFlowName(id));
     }
 
 }
