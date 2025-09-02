@@ -1,20 +1,18 @@
 package org.ainative.operations.n8n.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import okhttp3.ResponseBody;
 import org.ainative.operations.n8n.service.WorkflowService;
 import org.ainative.operations.twitter.entity.TwitterConfig;
-import org.ainative.operations.twitter.entity.TwitterInteractions;
 import org.ainative.operations.twitter.service.TwitterConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,25 +31,29 @@ public class WorkflowController {
     }
 
 
-
-
     @GetMapping
-    public ResponseEntity<JSONObject> queryById(UUID id , Boolean active) {
+    public ResponseEntity<JSONObject> queryById(UUID id, Boolean active) {
 
-        Optional<TwitterConfig> twitterConfig= twitterConfigService.findById(id );
+        Optional<TwitterConfig> twitterConfig = twitterConfigService.findById(id);
 
         return twitterConfig.map(config -> ResponseEntity.ok(workflowService.getFlows(config.getUsername(), active))).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
 
-    @GetMapping("/setActivate")
-    public ResponseEntity<Map<String, Boolean>> setActivate(@Param("workflowName") String workflowName) {
+    @GetMapping("/setActivate/{id}")
+    public ResponseEntity<Map<String, Boolean>> setActivate(@PathVariable("id") UUID id, @Param("flowName") String flowName) {
+        TwitterConfig cfg = twitterConfigService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Config not found: " + id));
+        String workflowName = cfg.getUsername() + "-" + flowName;
         return ResponseEntity.ok(Map.of("state", workflowService.setActivate(workflowName)));
     }
 
-    @GetMapping("/setDeactivate")
-    public ResponseEntity<Map<String, Boolean>> setDeactivate(@Param("workflowName") String workflowName) {
+    @GetMapping("/setDeactivate/{id}")
+    public ResponseEntity<Map<String, Boolean>> setDeactivate(@PathVariable("id") UUID id, @Param("flowName") String flowName) {
+        TwitterConfig cfg = twitterConfigService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Config not found: " + id));
+        String workflowName = cfg.getUsername() + "-" + flowName;
         return ResponseEntity.ok(Map.of("state", workflowService.setDeactivate(workflowName)));
     }
 
