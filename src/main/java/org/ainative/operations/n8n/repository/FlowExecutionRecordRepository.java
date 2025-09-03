@@ -23,10 +23,10 @@ public interface FlowExecutionRecordRepository extends JpaRepository<FlowExecuti
 
 
     @Query("select new org.ainative.operations.n8n.dao.TwitterFlowCountDto(" +
-            "f.twitterName, f.flowName, count(f)) " +
+            "f.twitterName, f.flowCommonName as serviceName, count(f)) " +
             "from FlowExecutionRecord f " +
             "where f.twitterName = :twitterName " +
-            "group by f.twitterName, f.flowName")
+            "group by f.twitterName, f.flowCommonName")
     List<TwitterFlowCountDto> countGroupByTwitterNameAndFlowName(@Param("twitterName") String twitterName);
 
 

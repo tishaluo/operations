@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class TwitterFlowCountDto {
     private String twitterName;
-    private String flowName;
+    private String serviceName;
     private Long count;
 }
