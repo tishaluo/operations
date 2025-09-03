@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.ainative.operations.config.N8nConfig;
+import org.ainative.operations.n8n.dao.FlowDto;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -55,10 +56,15 @@ public class WorkflowService {
                 String name = obj.getString("name");
                 String shortName = "";
                 if (name.startsWith(tag)) {
-                    shortName = name.replaceFirst(tag + "_", "");
+                    shortName = name.replaceFirst(tag + "-", "");
                 }
                 obj.put("shortName", shortName);
-                resultArr.add(o);
+
+                resultArr.add(FlowDto.builder().name(obj.getString("name"))
+                        .shortName(shortName)
+                        .active(obj.getBoolean("active"))
+                        .build()
+                );
 
             });
             data.put("data", resultArr);
