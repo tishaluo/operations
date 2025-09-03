@@ -11,4 +11,5 @@ public class N8nConfig {
     String baseurl;
     String apikey;
     String projectId;
+    String headerKey;
 }
