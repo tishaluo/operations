@@ -57,4 +57,15 @@ public class WorkflowController {
         return ResponseEntity.ok(Map.of("state", workflowService.setDeactivate(workflowName)));
     }
 
+    @GetMapping("/test/{id}")
+    public ResponseEntity<Map<String, Boolean>> test(@PathVariable("id") UUID id, @Param("flowName") String flowName
+            , @Param("active") Boolean active) {
+        TwitterConfig cfg = twitterConfigService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Config not found: " + id));
+        String workflowName = cfg.getUsername() + "-" + flowName;
+        return ResponseEntity.ok(Map.of("state", workflowService.toggleActiveByName(workflowName,active)));
+    }
+
+
+
 }

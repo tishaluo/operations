@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.ainative.operations.config.N8nConfig;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,21 +16,17 @@ import java.util.List;
 @Service
 public class WorkflowService {
 
-    @Value("n8n.baseurl")
-    private String baseurl;
+    private final N8nConfig n8nConfig;
 
-    @Value("n8n.apikey")
-    private String apikey;
-
-    @Value("n8n.headerKey")
-    private String headerKey;
-
+    public WorkflowService(N8nConfig n8nConfig) {
+        this.n8nConfig = n8nConfig;
+    }
 
     public JSONObject getFlows(String tag, Boolean active) {
 
         OkHttpClient client = new OkHttpClient();
 
-        String url = baseurl + "/api/v1/workflows";
+        String url = n8nConfig.getBaseurl() + "/api/v1/workflows";
         if (tag != null) {
             url = url + "?tags=" + tag;
         }
@@ -40,7 +37,7 @@ public class WorkflowService {
         Request request = new Request.Builder()
                 .url(url)
                 .get()
-                .addHeader(headerKey, apikey)
+                .addHeader(n8nConfig.getHeaderKey(), n8nConfig.getApikey())
                 .build();
 
         System.out.println(url);
@@ -182,6 +179,11 @@ public class WorkflowService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean toggleActiveByName(String workflowName, boolean active){
+        var n8n = new N8nClient(n8nConfig.getBaseurl(), n8nConfig.getApikey());
+        return n8n.toggleActiveByName(n8nConfig.getProjectId(), workflowName, active);
     }
 
 
