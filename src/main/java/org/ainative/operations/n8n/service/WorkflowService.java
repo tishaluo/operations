@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.ainative.operations.config.N8nConfig;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +38,6 @@ public class WorkflowService {
                 .get()
                 .addHeader(n8nConfig.getHeaderKey(), n8nConfig.getApikey())
                 .build();
-
-        System.out.println(url);
 
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
@@ -181,7 +178,7 @@ public class WorkflowService {
         }
     }
 
-    public boolean toggleActiveByName(String workflowName, boolean active){
+    public boolean toggleActiveByName(String workflowName, boolean active) {
         var n8n = new N8nClient(n8nConfig.getBaseurl(), n8nConfig.getApikey());
         return n8n.toggleActiveByName(n8nConfig.getProjectId(), workflowName, active);
     }
