@@ -3,15 +3,14 @@ package org.ainative.operations.n8n.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.ainative.operations.config.N8nConfig;
 import org.ainative.operations.n8n.dao.FlowDto;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class WorkflowService {
@@ -71,116 +70,6 @@ public class WorkflowService {
             return data;
         } catch (IOException e) {
             throw new RuntimeException("Request failed", e);
-        }
-    }
-
-    public boolean setActivate(String workflowName) {
-        String projectId = "2TBrwKIbGeIdNf3R";
-        List<String> list = getWorkflowId(projectId, workflowName);
-        if (list.size() != 1) {
-            return false;
-        }
-        OkHttpClient client = new OkHttpClient();
-        // 创建JSON请求体
-        String json = "{\"active\":" + true + "}";
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-        // 确保RequestBody不为null
-        RequestBody requestBody = RequestBody.create(json, JSON);
-        Request request = new Request.Builder()
-                .url("http://31.97.131.76:5678/api/v1/workflows/" + list.get(0) + "/activate")
-                .post(requestBody)
-                .addHeader("X-N8N-API-KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Yjg1YzcwZC02ZWEwLTRiYzQtYWM4Yi01ZGYxNzM0YjQ3MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzU1NjYzNTcyfQ.3NsQ1t_4QIx8iFnQVTEx0U_t_RupRijbrdycbP2gGNg")
-                .build();
-
-        Response response = null;
-        try {
-            response = client.newCall(request).execute();
-            if (response.body() != null) {
-                JSONObject resultJson = JSONObject.parseObject(response.body().string());
-                return resultJson.containsKey("active");
-            }
-            return false;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private List<String> getWorkflowId(String projectId, String workflowName) {
-        OkHttpClient client = new OkHttpClient();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        String url = "http://31.97.131.76:5678/api/v1/workflows?projectId=" + projectId +
-                "&limit=10&name=" + workflowName;
-
-        Request request = new Request.Builder()
-                .header("Accept", "application/json")
-                .url(url)
-                .get()
-                .addHeader("X-N8N-API-KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Yjg1YzcwZC02ZWEwLTRiYzQtYWM4Yi01ZGYxNzM0YjQ3MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzU1NjYzNTcyfQ.3NsQ1t_4QIx8iFnQVTEx0U_t_RupRijbrdycbP2gGNg")
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-
-            if (!response.isSuccessful()) {
-                throw new RuntimeException("Unexpected code: " + response);
-            }
-
-            assert response.body() != null;
-            String responseBody = response.body().string();
-            return getWorkflowIds(JSON.parseObject(responseBody));
-        } catch (IOException e) {
-            throw new RuntimeException("API call failed: " + e.getMessage(), e);
-        }
-    }
-
-    private List<String> getWorkflowIds(JSONObject obj) {
-        try {
-            JSONArray dataArray = obj.getJSONArray("data");
-            List<String> result = new ArrayList<>();
-            for (int i = 0; i < dataArray.size(); i++) {
-                JSONObject workflow = dataArray.getJSONObject(i);
-                if (workflow.containsKey("id")) {
-                    result.add(workflow.getString("id"));
-                }
-            }
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null; // 如果没有找到返回null
-    }
-
-    public boolean setDeactivate(String workflowName) {
-        String projectId = "2TBrwKIbGeIdNf3R";
-        List<String> list = getWorkflowId(projectId, workflowName);
-        if (list != null && list.size() > 1) {
-            return false;
-        }
-        OkHttpClient client = new OkHttpClient();
-        // 创建JSON请求体
-        String json = "{\"active\":" + false + "}";
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-        // 确保RequestBody不为null
-        RequestBody requestBody = RequestBody.create(json, JSON);
-        Request request = new Request.Builder()
-                .url("http://31.97.131.76:5678/api/v1/workflows/" + list.get(0) + "/deactivate")
-                .post(requestBody)
-                .addHeader("X-N8N-API-KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Yjg1YzcwZC02ZWEwLTRiYzQtYWM4Yi01ZGYxNzM0YjQ3MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzU1NjYzNTcyfQ.3NsQ1t_4QIx8iFnQVTEx0U_t_RupRijbrdycbP2gGNg")
-                .build();
-
-        Response response = null;
-        try {
-            response = client.newCall(request).execute();
-            if (response.body() != null) {
-                JSONObject resultJson = JSONObject.parseObject(response.body().string());
-                return resultJson.containsKey("active");
-            }
-            return false;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 

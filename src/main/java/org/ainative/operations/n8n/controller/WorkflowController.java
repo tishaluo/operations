@@ -46,7 +46,7 @@ public class WorkflowController {
         TwitterConfig cfg = twitterConfigService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Config not found: " + id));
         String workflowName = cfg.getUsername() + "-" + flowName;
-        return ResponseEntity.ok(Map.of("state", workflowService.setActivate(workflowName)));
+        return ResponseEntity.ok(Map.of("state", workflowService.toggleActiveByName(workflowName,true)));
     }
 
     @GetMapping("/setDeactivate/{id}")
@@ -54,18 +54,7 @@ public class WorkflowController {
         TwitterConfig cfg = twitterConfigService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Config not found: " + id));
         String workflowName = cfg.getUsername() + "-" + flowName;
-        return ResponseEntity.ok(Map.of("state", workflowService.setDeactivate(workflowName)));
+        return ResponseEntity.ok(Map.of("state", workflowService.toggleActiveByName(workflowName,false)));
     }
-
-    @GetMapping("/test/{id}")
-    public ResponseEntity<Map<String, Boolean>> test(@PathVariable("id") UUID id, @Param("flowName") String flowName
-            , @Param("active") Boolean active) {
-        TwitterConfig cfg = twitterConfigService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Config not found: " + id));
-        String workflowName = cfg.getUsername() + "-" + flowName;
-        return ResponseEntity.ok(Map.of("state", workflowService.toggleActiveByName(workflowName,active)));
-    }
-
-
 
 }
