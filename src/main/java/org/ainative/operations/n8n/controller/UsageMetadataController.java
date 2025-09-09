@@ -1,5 +1,6 @@
 package org.ainative.operations.n8n.controller;
 
+import org.ainative.operations.n8n.dao.UsageTokenSums;
 import org.ainative.operations.n8n.domain.UsageMetadata;
 import org.ainative.operations.n8n.service.UsageMetadataService;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,17 @@ public class UsageMetadataController {
         return ResponseEntity.ok(usageMetadataService.createUsageMetadata(usageMetadata));
     }
 
-    @GetMapping("/{executionId}")
-    public ResponseEntity<List<UsageMetadata>> findUsageMetadata(@PathVariable Long executionId) {
-        return ResponseEntity.ok(usageMetadataService.findUsageMetadata(executionId));
+    @GetMapping
+    public ResponseEntity<List<UsageMetadata>> findUsageMetadata(
+            @RequestParam(required = false) String flowId,
+            @RequestParam(required = false) Long executionId) {
+        return ResponseEntity.ok(usageMetadataService.findUsageMetadata(flowId, executionId));
     }
 
 
+    @GetMapping("/sum")
+    public ResponseEntity<UsageTokenSums> sum(@RequestParam(required = false) String flowId,
+                                              @RequestParam(required = false) Long executionId) {
+        return ResponseEntity.ok(usageMetadataService.sumUsageMetadata(flowId, executionId));
+    }
 }

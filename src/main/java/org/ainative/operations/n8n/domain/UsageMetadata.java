@@ -21,6 +21,9 @@ public class UsageMetadata {
     @Column(name = "execution_id")
     private Long executionId;
 
+    @Column(name = "flow_id")
+    private String flowId;
+
     /** 提示词 tokens 计数 */
     @Column(name = "prompt_token_count")
     private Long promptTokenCount;
