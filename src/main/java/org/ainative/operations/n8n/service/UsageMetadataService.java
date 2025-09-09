@@ -23,12 +23,12 @@ public class UsageMetadataService {
         return usageMetadataRepository.save(usageMetadata);
     }
 
-    public List<UsageMetadata> findUsageMetadata(String flowId, Long executionId) {
+    public List<UsageMetadata> findUsageMetadata(String flowId, String executionId) {
 
 
         UsageMetadata probe = UsageMetadata.builder().build();
 
-        if (executionId != null) {
+        if (!StringUtil.isNullOrEmpty(executionId)) {
             probe.setExecutionId(executionId);
         }
 
@@ -52,7 +52,7 @@ public class UsageMetadataService {
         return usageMetadataRepository.findAll(example);
     }
 
-    public UsageTokenSums sumUsageMetadata(String flowId, Long executionId) {
+    public UsageTokenSums sumUsageMetadata(String flowId, String executionId) {
         // 统一把空字符串当作 null 处理，便于查询放开该条件
         String flow = (flowId == null || flowId.isBlank()) ? null : flowId;
         return usageMetadataRepository.sumFields(flow, executionId);

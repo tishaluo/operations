@@ -19,7 +19,7 @@ public class UsageMetadata {
     private Long id;
 
     @Column(name = "execution_id")
-    private Long executionId;
+    private String executionId;
 
     @Column(name = "flow_id")
     private String flowId;

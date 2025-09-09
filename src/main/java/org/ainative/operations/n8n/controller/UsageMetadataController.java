@@ -26,14 +26,14 @@ public class UsageMetadataController {
     @GetMapping
     public ResponseEntity<List<UsageMetadata>> findUsageMetadata(
             @RequestParam(required = false) String flowId,
-            @RequestParam(required = false) Long executionId) {
+            @RequestParam(required = false) String executionId) {
         return ResponseEntity.ok(usageMetadataService.findUsageMetadata(flowId, executionId));
     }
 
 
     @GetMapping("/sum")
     public ResponseEntity<UsageTokenSums> sum(@RequestParam(required = false) String flowId,
-                                              @RequestParam(required = false) Long executionId) {
+                                              @RequestParam(required = false) String executionId) {
         return ResponseEntity.ok(usageMetadataService.sumUsageMetadata(flowId, executionId));
     }
 }

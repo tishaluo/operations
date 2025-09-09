@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface UsageMetadataRepository extends JpaRepository<UsageMetadata, Long> {
 
-    List<UsageMetadata> findByExecutionId(Long executionId);
+    List<UsageMetadata> findByExecutionId(String executionId);
 
     @Query("""
             select new org.ainative.operations.n8n.dao.UsageTokenSums(
@@ -27,6 +27,6 @@ public interface UsageMetadataRepository extends JpaRepository<UsageMetadata, Lo
               and (:executionId is null or u.executionId = :executionId)
             """)
     UsageTokenSums sumFields(@Param("flowId") String flowId,
-                             @Param("executionId") Long executionId);
+                             @Param("executionId") String executionId);
 
 }
